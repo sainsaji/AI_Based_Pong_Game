@@ -14,6 +14,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "fonts/Picopixel.h"
 
 //Definitions
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -55,6 +56,8 @@ int main_menu()
   display.setTextColor(WHITE);
   display.println("[MAIN MENU]");
   display.setCursor(0,10);
+  display.setTextSize(2);
+  display.setFont(&Picopixel);
   display.println("[1] Start Game\n[2] View High Score");
   return 0;
 }
