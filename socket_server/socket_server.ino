@@ -3,7 +3,7 @@
 #include <SPI.h> //Load the SPI Library
 
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEE}; //Assign a mac address
-IPAddress ip(192, 168, 1, 14); //Assign my IP adress
+IPAddress ip(192, 168, 137, 1); //Assign my IP adress
 unsigned int localPort = 5000; //Assign a Port to talk over
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE];
 String datReq; //String for our data
@@ -48,15 +48,16 @@ void setup()
 int redval, blueval = 0;
 void loop()
 {
-
   packetSize = Udp.parsePacket(); //Read theh packetSize
 
-  if (packetSize > 0) { //Check to see if a request is present
+  if (packetSize > 0) 
+  { //Check to see if a request is present
 
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE); //Reading the data request on the Udp
     String datReq(packetBuffer); //Convert packetBuffer array to string datReq
 
-    if (datReq == "Red") { //See if Red was requested
+    if (datReq == "Red") 
+    { //See if Red was requested
       Serial.println("Red Value:");
       Serial.println(redval);
       redval += 1;
@@ -64,13 +65,15 @@ void loop()
       Udp.print("You are Asking for Red"); //Send string back to client
       Udp.endPacket(); //Packet has been sent
     }
-    if (datReq == "Green") { //See if Green was requested
+    if (datReq == "Green") 
+    { //See if Green was requested
 
       Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());  //Initialize Packet send
       Udp.print("You are Asking for Green"); //Send string back to client
       Udp.endPacket(); //Packet has been sent
     }
-    if (datReq == "Blue") {
+    if (datReq == "Blue") 
+    {
       blueval += 1; //See if Red was requested
       Serial.println("Blue Value:");
       Serial.println(blueval);
