@@ -16,7 +16,7 @@ ip = input("Enter the IP from Serial Monitor")
 # '192.168.137.237'
 address = (ip, 5000)  # Bind Address and port, Same as Arduino address and port
 client_socket = socket(AF_INET, SOCK_DGRAM)  # Set Up the Socket
-client_socket.settimeout(0.01)  # only wait 1 second for a resonse
+client_socket.settimeout(0.07)  # only wait 1 second for a resonse
 
 
 def getNumber(ar):

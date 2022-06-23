@@ -35,6 +35,7 @@ int packetSize; //Size of Packet
 EthernetUDP Udp; //Define UDP Object
 String localip="192.168.2.1";
 int incoming;
+int y=0;
 void setup()
 {
   ethstart();
@@ -62,6 +63,19 @@ void loop()
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE); //Reading the data request on the Udp
     String datReq(packetBuffer); //Convert packetBuffer array to string datReq
     incoming = datReq.toInt();
+    if(incoming==1)
+    {
+      y+=1;
+      if(y==54)
+      y=54;
+      
+    }
+    else
+    {
+      y-=1;
+      if(y==0)
+      y=0;
+    }
     if (datReq == "Start") 
     { //See if Red was requested
       gamestatus = 1; //to start the game
@@ -153,7 +167,7 @@ int startgame()
   display.clearDisplay();
   display.setCursor(100,40);
   display.print(incoming);
-  display.drawRect(40, incoming, 5, 10, WHITE);
+  display.drawRect(40, y, 5, 10, WHITE);
   display.display();
   return 0;
   
