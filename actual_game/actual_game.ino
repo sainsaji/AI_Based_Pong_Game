@@ -121,14 +121,16 @@ int enemy_fire()
     bullet_rate+=1;
     display.fillRect(bullet_x,bullet_y,3,3,WHITE);
     //collition detection
-    if(bullet_y>=y&&bullet_y<=y+20)
+    if((bullet_y>=y&&bullet_y<=y+20))
     {
-      if(bullet_x==10)
+      if(bullet_x>=0&&bullet_x<=15)
+      {
       display.setCursor(100,40);
       display.print("HIT");
       score+=1;
+      }
     }
-    display.setCursor(100,40);
+    display.setCursor(0,0);
     display.print(bullet_x);
   }
   if(bullet_x<=5)
@@ -149,7 +151,6 @@ int main_menu()
   display.setCursor(80,0);
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  display.print("INP:");
   read_input();
   action();
   move_basket();
