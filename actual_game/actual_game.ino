@@ -95,13 +95,14 @@ int move_basket()
 }
 
 int enemy_y=0;
-int enemy()
+
+int move_enemy()
 {
-  enemy_y+=1
-  display.fillRect(10,enemy_y,5,20,WHITE);
-  if(enemy_y>=64-20)
+  enemy_y+=1;
+  display.fillRect(120,enemy_y,5,20,WHITE);
+  if(enemy_y>=64)
   {
-    enemy_y=64-20;
+    enemy_y=0;
   }
   if(enemy_y<=0)
   {
@@ -120,6 +121,7 @@ int main_menu()
   read_input();
   action();
   move_basket();
+  move_enemy();
   display.display();
   return 0;
 }
