@@ -92,26 +92,10 @@ int move_basket()
   display.fillRect(10,y,5,20,WHITE);
 }
 
-int enemy_y=0;
-
-int move_enemy()
-{
-  enemy_y+=1;
-  display.fillRect(120,enemy_y,10,10,WHITE);
-  if(enemy_y>=64)
-  {
-    enemy_y=0;
-  }
-  if(enemy_y<=0)
-  {
-    enemy_y=0;
-  }
-}
-
 int fire_when=3;
 int bullet_x = 128-5;
 int bullet_y = 32;
-int bullet_rate = 10;
+int bullet_rate = 1;
 int score = 0;
 int enemy_fire()
 {
@@ -136,8 +120,8 @@ int enemy_fire()
   if(bullet_x<=5)
   {
     bullet_x = 128-5;
-    bullet_rate=0;
     bullet_y = random(0,63);
+    bullet_rate=1;
   }
 }
 
@@ -154,7 +138,6 @@ int main_menu()
   read_input();
   action();
   move_basket();
-  // move_enemy();
   enemy_fire();
   printscore();
   display.display();
