@@ -85,8 +85,6 @@ int action()
   {
     y=0;
   }
-  display.setCursor(100,10);
-  display.print(y);
 }
 
 int move_basket()
@@ -112,33 +110,35 @@ int move_enemy()
 
 int fire_when=3;
 int bullet_x = 128-5;
-int bullet_y;
-int bullet_rate = 5;
+int bullet_y = 32;
+int bullet_rate = 10;
+int score = 0;
 int enemy_fire()
 {
   if(fire_when==3)
   {
     bullet_x=bullet_x-bullet_rate;
     bullet_rate+=1;
-    display.fillRect(bullet_x,0,3,3,WHITE);
-    if(y>=0&&y<=20)
+    display.fillRect(bullet_x,bullet_y,3,3,WHITE);
+    //collition detection
+    if(bullet_y>=y&&bullet_y<=y+20)
     {
+      if(bullet_x==10)
       display.setCursor(100,40);
       display.print("HIT");
+      score+=1;
     }
-    else if(y>20)
-    {
     display.setCursor(100,40);
-    display.print("NO");
-    }
+    display.print(bullet_x);
   }
   if(bullet_x<=5)
   {
     bullet_x = 128-5;
     bullet_rate=0;
+    bullet_y = random(0,63);
   }
 }
-int score = 0;
+
 int printscore()
 {
   display.setCursor(100,50);
@@ -150,14 +150,10 @@ int main_menu()
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.print("INP:");
-  display.setCursor(100,0);
-  display.print(current_input);
-  display.setCursor(100,30);
-  display.print(bullet_x);
   read_input();
   action();
   move_basket();
-  move_enemy();
+  // move_enemy();
   enemy_fire();
   printscore();
   display.display();
