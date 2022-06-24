@@ -99,7 +99,8 @@ int enemy_y=0;
 int move_enemy()
 {
   enemy_y+=1;
-  display.fillRect(120,enemy_y,5,20,WHITE);
+  display.fillRect(120,enemy_y,10,10,WHITE);
+  enemy_fire();
   if(enemy_y>=64)
   {
     enemy_y=0;
@@ -110,6 +111,27 @@ int move_enemy()
   }
 }
 
+int fire_when=0;
+int bullet_x = 128-5;
+int bullet_rate = 5;
+int enemy_fire()
+{
+  fire_when = random(0, 5);
+  if(fire_when==3)
+  {
+    bullet_x=bullet_x-bullet_rate;
+    bullet_rate+=1;
+
+    display.fillRect(bullet_x,32,3,3,WHITE);
+  }
+  if(bullet_x<=5)
+  {
+    bullet_x = 128-5;
+    bullet_rate=0;
+  }
+
+}
+
 int main_menu()
 {
   display.setCursor(80,0);
@@ -118,10 +140,13 @@ int main_menu()
   display.print("INP:");
   display.setCursor(100,0);
   display.print(current_input);
+  display.setCursor(100,30);
+  display.print(bullet_x);
   read_input();
   action();
   move_basket();
   move_enemy();
+  
   display.display();
   return 0;
 }
