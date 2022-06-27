@@ -114,8 +114,6 @@ int enemy_fire()
       score+=1;
       }
     }
-    display.setCursor(0,0);
-    display.print(bullet_x);
   }
   if(bullet_x<=5)
   {
@@ -127,7 +125,9 @@ int enemy_fire()
 
 int printscore()
 {
-  display.setCursor(100,50);
+  display.setCursor(80,55);
+  display.print("SCORE:");
+  display.setCursor(115,55);
   display.print(score);
 }
 int main_menu()
