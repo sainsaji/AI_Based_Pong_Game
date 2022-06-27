@@ -47,7 +47,7 @@ void setup()
   display.display();
   setip();
   display.display();
-  delay(5000);
+  delay(10000);
   display.fillScreen(0);
   display.clearDisplay();
   display.display();
@@ -113,10 +113,10 @@ int action()
   {
     y+=y_rate;
   }
-  if(current_input==1) //reset
-  {
-    y=0;
-  }
+//  if(current_input==1) //reset
+//  {
+//    y=0;
+//  }
   if(current_input==0) //decrement
   {
     y-=y_rate;

@@ -157,7 +157,6 @@ int setip()
   display.println("IP Address is:");
   writeip(DisplayAddress(Ethernet.localIP()));
   writeip(localip);
-
   return 0;
 }
 
