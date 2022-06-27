@@ -9,6 +9,7 @@ import os
 import time
 import handTrackingModule as htm
 import sys
+from datetime import datetime
 
 # To implements sockets
 from socket import *
@@ -48,7 +49,14 @@ cap.set(3, wcam)
 cap.set(4, hcam)
 pTime = 0
 detector = htm.handDetector(detectionCon=0.75)
+now = datetime.now()
 while True:
+    later = datetime.now()
+    difference = (later - now).total_seconds()
+    if(difference>60):
+        data = "STOP"
+        client_socket.sendto(data.encode('utf-8'), address)
+        break
     success, img = cap.read()
     img = detector.findHands(img, draw=True)
     lmList = detector.findPosition(img, draw=False)
