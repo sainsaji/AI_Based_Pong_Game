@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Apr  3 23:09:19 2021
-
-@author: amine gasa
+@author: sain saji
 """
+#importing libraries
 import cv2
 import os
 import time
@@ -11,7 +10,8 @@ import handTrackingModule as htm
 import sys
 from datetime import datetime
 
-# To implements sockets
+
+# To implements sockets and socket initialization
 from socket import *
 ip = input("Enter the IP from Serial Monitor")
 # '192.168.137.237'
@@ -20,6 +20,7 @@ client_socket = socket(AF_INET, SOCK_DGRAM)  # Set Up the Socket
 client_socket.settimeout(0.07)  # only wait 1 second for a resonse
 
 
+#setting numbers for each gestures
 def getNumber(ar):
     s = ""
     for i in ar:
@@ -43,20 +44,30 @@ def getNumber(ar):
         return(7)
 
 
+#webcam initialization
 wcam, hcam = 640, 480
 cap = cv2.VideoCapture(0)
 cap.set(3, wcam)
 cap.set(4, hcam)
 pTime = 0
 detector = htm.handDetector(detectionCon=0.75)
+
+#capture current time before starting detection
 now = datetime.now()
+
+#start capture and detection
 while True:
+    # capture time after each frame
     later = datetime.now()
     difference = (later - now).total_seconds()
+
+    #if difference is above 60 seconds stop capture and detection
     if(difference>60):
         data = "STOP"
         client_socket.sendto(data.encode('utf-8'), address)
         break
+
+    #capture cordinates
     success, img = cap.read()
     img = detector.findHands(img, draw=True)
     lmList = detector.findPosition(img, draw=False)
@@ -78,9 +89,12 @@ while True:
             else:
                 fingers.append(0)
 
+        #draw landmarks,text for each gestures
         cv2.rectangle(img, (20, 255), (170, 425), (0, 255, 0), cv2.FILLED)
         cv2.putText(img, str(getNumber(fingers)), (45, 375), cv2.FONT_HERSHEY_PLAIN,
                                      10, (255, 0, 0), 20)
+        
+        #get the number for gesture
         print(getNumber(fingers))
         data = str(getNumber(fingers))  # Set data to Blue Command
         # send command to arduino
@@ -93,10 +107,12 @@ while True:
             
 
 
-
+    #to calcualate fps
     cTime = time.time()
     fps = 1/(cTime-pTime)
     pTime = cTime
+
+    #to display fps
     cv2.putText(img, f'FPS: {int(fps)}', (400,70),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,0),3)
     cv2.imshow("image", img)
     if(cv2.waitKey(1) & 0xFF == ord('q')):

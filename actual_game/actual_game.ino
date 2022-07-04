@@ -33,21 +33,30 @@ char packetBuffer[UDP_TX_PACKET_MAX_SIZE];
 String datReq; //String for our data
 int packetSize; //Size of Packet
 EthernetUDP Udp; //Define UDP Object
-String localip="192.168.2.1";
+String localip="192.168.2.1"; //sets a temporary local IP address
 
-
+//initialize the control signal
 int current_input = 10;
 
 void setup()
 {
+  //sets and initialize the sockets
   ethstart();
   delay(1500); //delay
+
+  //sets and initialize the SSD1306 display
   display.begin(SSD1306_SWITCHCAPVCC,0x3C);
   display.fillScreen(0); //0 for filling with black dots. 1 for white
   display.display();
+
+  //display the IP address to bind on the screen
   setip();
   display.display();
+
+  //sets a delay allowing the user to copy the address to the python console
   delay(10000);
+
+  //clears the display
   display.fillScreen(0);
   display.clearDisplay();
   display.display();
@@ -56,12 +65,19 @@ void setup()
 
 void loop()
 {
+  //starts the game
   main_menu();
+
+  //clears and updates the display
   display.display();
   display.fillScreen(0);
   display.clearDisplay();
 }
+
+//sets the score to zero on start
 int score = 0;
+
+//display the game over screen with the score attained
 int game_over()
 {
   while(1)
@@ -77,27 +93,26 @@ int game_over()
     display.display();
   }
 }
+
+// read the control signals from the python code
 int read_input()
 {
-  current_input=10;
+  //initialize the packetSize
   packetSize = Udp.parsePacket(); //Read theh packetSize
   if (packetSize > 0) 
   { //Check to see if a request is present
 
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE); //Reading the data request on the Udp
     String datReq(packetBuffer); //Convert packetBuffer array to string datReq21
-    current_input = datReq.toInt();
-    if (datReq == "Start") 
-    { //See if Red was requested
-      Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());  //Initialize Packet send
-      Udp.print("You are Asking to start the game"); //Send string back to client
-      Udp.endPacket(); //Packet has been sent
-    }
+    current_input = datReq.toInt(); //converts the received control signal to integer value
+
+    //if the recived data is "STOP" the capture
     if (datReq == "STOP") 
     { //See if Red was requested
       Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());  //Initialize Packet send
       Udp.print("GAME OVER"); //Send string back to client
       Udp.endPacket(); //Packet has been sent
+      //display the end game screen
       game_over();
     }
   }
@@ -105,22 +120,21 @@ int read_input()
   return 0;
 }
 
+//to control the player paddle
 int y=0;
 int y_rate=5;
 int action()
 {
-  if(current_input==5) //increement
+  if(current_input==5) //increment if 5 is recived
   {
     y+=y_rate;
   }
-//  if(current_input==1) //reset
-//  {
-//    y=0;
-//  }
-  if(current_input==0) //decrement
+  if(current_input==0) //decrement 5 if 0 is recived
   {
     y-=y_rate;
   }
+
+  //if player paddle reach max or min y make it stationary
   if(y>=64-20)
   {
     y=64-20;
@@ -132,17 +146,20 @@ int action()
   return 0;
 }
 
+//display the player paddle
 int move_basket()
 {
   display.fillRect(10,y,5,20,WHITE);
   return 0;
 }
 
+//initialize the apple variables.
 int fire_when=3;
 int bullet_x = 128-5;
 int bullet_y = 32;
 int bullet_rate = 1;
 
+//fire the apples
 int enemy_fire()
 {
   if(fire_when==3)
@@ -161,6 +178,7 @@ int enemy_fire()
       }
     }
   }
+  //reset apples and start from a random position
   if(bullet_x<=5)
   {
     bullet_x = 128-5;
@@ -170,6 +188,7 @@ int enemy_fire()
   return 0;
 }
 
+//print the score to the bottom of the screen
 int printscore()
 {
   display.setCursor(80,55);
@@ -178,6 +197,8 @@ int printscore()
   display.print(score);
   return 0;
 }
+
+//starts the game setting player paddle and apples
 int main_menu()
 {
   display.setCursor(80,0);
@@ -191,6 +212,8 @@ int main_menu()
   display.display();
   return 0;
 }
+
+//initialize the Ethernet Socket UDP connection
 
 int ethstart()
 {
@@ -228,7 +251,7 @@ int ethstart()
   return 0;
 }
 
-
+//converts the address to printable string
 String DisplayAddress(IPAddress address)
   {
  return String(address[0]) + "." + 
@@ -237,7 +260,7 @@ String DisplayAddress(IPAddress address)
         String(address[3]);
   }
 
-  
+// display the IP address of the pico board
 int setip()
 {
   display.setCursor(0,0);
@@ -245,10 +268,11 @@ int setip()
   display.setTextColor(WHITE);
   display.println("IP Address is:");
   writeip(DisplayAddress(Ethernet.localIP()));
-  writeip(localip);
+//  writeip(localip);
   return 0;
 }
 
+//display the IP address to the screen
 int writeip(String ipaddress)
 {
   display.setCursor(0,10);
